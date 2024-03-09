@@ -24,14 +24,29 @@ const TaskMng = () => {
         };
         setTaskLists([...taskLists, newList]);
         toggleForm(); //close the form
-    }
+    };
+
+    const handleAddTaskToList = (listId, task) => {
+        //find the list with the matching list id
+        const updatedTaskLists = taskLists.map(list => {
+            if (list.id === listId) {
+                return {
+                    ...list,
+                    tasks: { ...list.task, task }
+                };
+            }
+            return list;
+        });
+        setTaskLists(updatedTaskLists);
+    };
+
     return (
         <div>
 
             <p>Welcome</p>
             <button onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
-            <TaskList taskLists={taskLists} />
+            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} />
 
         </div>
     )
