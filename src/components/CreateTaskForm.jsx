@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import "./TaskMng.css";
 
 const TaskForm = ({ onCreateTask }) => {
     const [taskName, setTaskName] = useState('');
@@ -39,7 +40,7 @@ const TaskForm = ({ onCreateTask }) => {
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
             />
-            <button type="submit">Add Task</button>
+            <button className="addTaskButton" type="submit">Add Task</button>
         </form>
     );
 };

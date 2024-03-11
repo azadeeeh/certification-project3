@@ -1,6 +1,7 @@
 //display the list of task lists
 import React, { useState } from 'react';
 import TaskForm from './CreateTaskForm';
+import "./TaskMng.css";
 //gets taskLists as prop from parent TaskMng
 //taskLists is an array of objects
 const TaskList = ({ taskLists, onAddTask }) => {
@@ -33,7 +34,7 @@ const TaskList = ({ taskLists, onAddTask }) => {
                 {taskLists.map((list) => (
                     <li key={list.id}>
                         {list.name}
-                        <button onClick={() => setShowTaskForm(!showTaskForm)}>Add Task</button>
+                        <button className='addTaskButton' onClick={() => setShowTaskForm(!showTaskForm)}>Add Task</button>
                         {showTaskForm && (
                             <TaskForm
                                 onCreateTask={(task) => handleAddTask(list.id, task)}

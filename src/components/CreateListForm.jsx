@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./TaskMng.css";
 //form for creating new task list
 //showForm and onCreateList are props from parent component (TaskMng)
 const CreateListForm = ({ showForm, onCreateList }) => {
@@ -23,8 +24,8 @@ const CreateListForm = ({ showForm, onCreateList }) => {
     }
     return (
         <form onSubmit={(handleSubmit)}>
-            <input type="text" placeholder="Task List Name" value={listName} onChange={handleChange} />
-            <button type="submit">Create</button>
+            <input className="listInput" type="text" placeholder="Task List Name" value={listName} onChange={handleChange} />
+            <button className="listSubmitButton" type="submit">Create</button>
         </form>
     );
 };

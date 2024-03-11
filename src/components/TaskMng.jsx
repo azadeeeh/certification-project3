@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CreateListForm from './CreateListForm'; // Import the TaskForm component
 import TaskList from './TaskList';
+import "./TaskMng.css";
 
 
 //main interface of the task manager
@@ -10,6 +11,8 @@ const TaskMng = () => {
     const [showForm, setShowForm] = useState(false);
     //state for storing the list of task lists
     const [taskLists, setTaskLists] = useState([]);
+
+
     //toggle value of showForm to control visibility of the create list form
     const toggleForm = () => {
         setShowForm(!showForm);
@@ -41,10 +44,10 @@ const TaskMng = () => {
     };
 
     return (
-        <div>
+        <div className="tasksListContainer">
 
-            <p>Welcome</p>
-            <button onClick={toggleForm} >Create a new Task List</button>
+            <h1>Welcome</h1>
+            <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
             <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} />
 
