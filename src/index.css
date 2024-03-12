@@ -50,13 +50,3 @@ body{
   color: #FF853F;
 }
 
-.createListButton{
-  border-radius: 5px;
-  background-color:#FEB487;
-  border: solid black;
-  height: 50px;
-  width: 250px;
-  color: white;
-  margin: 40px;
-  font-size: 20px;
-}
