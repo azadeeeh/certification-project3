@@ -4,7 +4,7 @@ import TaskList from './TaskList';
 import "./TaskMng.css";
 
 
-//main interface of the task manager
+//main component of the task manager
 //localStorage: https://chat.openai.com/share/6987d91c-ad3d-4677-9601-0b4ab3da17c4
 
 const TaskMng = () => {
@@ -45,6 +45,7 @@ const TaskMng = () => {
         toggleForm(); //close the form
     };
 
+    //adding new task to a list
     const handleAddTaskToList = (listId, task) => {
         //find the list with the matching list id
         const updatedTaskLists = taskLists.map(list => {
@@ -59,13 +60,17 @@ const TaskMng = () => {
         setTaskLists(updatedTaskLists);
     };
 
+    const handleDeleteList = (newTaskLists) => {
+        setTaskLists(newTaskLists);
+    };
+
     return (
         <div className="tasksListContainer">
 
             <h1>Welcome</h1>
             <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
-            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} />
+            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} />
 
         </div>
     )

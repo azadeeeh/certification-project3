@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./TaskMng.css";
 //form for creating new task list
-//showForm and onCreateList are props from parent component (TaskMng)
+//showForm (show form ot not) and onCreateList(handelscreating new task list) are props from parent component (TaskMng)
 const CreateListForm = ({ showForm, onCreateList }) => {
 
     //state to store the input value from the form field

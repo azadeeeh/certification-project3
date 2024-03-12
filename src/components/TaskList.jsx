@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import TaskForm from './CreateTaskForm';
 import "./TaskMng.css";
-//gets taskLists as prop from parent TaskMng
+//gets taskLists, onAddRAsk and onDeleteList as props from parent TaskMng
 //taskLists is an array of objects
-const TaskList = ({ taskLists, onAddTask }) => {
+const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
     const [showTaskForm, setShowTaskForm] = useState(false);
     /*const handleAddTask = (listId, task) => {
         onAddTask(listId, task);
@@ -27,6 +27,11 @@ const TaskList = ({ taskLists, onAddTask }) => {
 
         setShowTaskForm(false); // Close task input form after adding task
     };
+
+    const handleDeleteList = (listId) => {
+        const newTaskLists = taskLists.filter(list => list.id !== listId);
+        onDeleteList(newTaskLists);
+    }
     return (
         <div>
             <h2>Task Lists</h2>
@@ -34,7 +39,8 @@ const TaskList = ({ taskLists, onAddTask }) => {
                 {taskLists.map((list) => (
                     <li key={list.id}>
                         {list.name}
-                        <button className='addTaskButton' onClick={() => setShowTaskForm(!showTaskForm)}>Add Task</button>
+                        <button className='add-deleteTaskButton' onClick={() => setShowTaskForm(!showTaskForm)}>Add Task</button>
+                        <button className='add-deleteTaskButton' onClick={() => handleDeleteList(list.id)}>Delete List</button>
                         {showTaskForm && (
                             <TaskForm
                                 onCreateTask={(task) => handleAddTask(list.id, task)}
