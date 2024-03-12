@@ -5,11 +5,22 @@ import "./TaskMng.css";
 //gets taskLists, onAddRAsk and onDeleteList as props from parent TaskMng
 //taskLists is an array of objects
 const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
-    const [showTaskForm, setShowTaskForm] = useState(false);
+
+    //store boolean values for each list ID to only show task form for that specific list that has been clicled
+    const [showTaskForm, setShowTaskForm] = useState({});
     /*const handleAddTask = (listId, task) => {
         onAddTask(listId, task);
         setShowTaskForm(false);
     };*/
+    const handleToggleTaskForm = (listId) => {
+        // Toggle the boolean value for the clicked listId
+        //prevState shows the previous state of showTaskForm
+        //setShowTaskForm updates the state
+        setShowTaskForm(prevState => ({
+            ...prevState,
+            [listId]: !prevState[listId]// If there is no id equal to the one we want in prevState close
+        }));
+    };
     //this function is called when a new task is added
     const handleAddTask = (listId, task) => {
         // Find the list index in the taskLists array based on the listId
@@ -28,6 +39,7 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
         setShowTaskForm(false); // Close task input form after adding task
     };
 
+    //delete function find the list with the specific id and adds the rest to the new list using filter
     const handleDeleteList = (listId) => {
         const newTaskLists = taskLists.filter(list => list.id !== listId);
         onDeleteList(newTaskLists);
@@ -39,9 +51,9 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
                 {taskLists.map((list) => (
                     <li key={list.id}>
                         {list.name}
-                        <button className='add-deleteTaskButton' onClick={() => setShowTaskForm(!showTaskForm)}>Add Task</button>
+                        <button className='add-deleteTaskButton' onClick={() => handleToggleTaskForm(list.id)}>{showTaskForm[list.id] ? 'Hide Task Form' : 'Add Task'}</button>
                         <button className='add-deleteTaskButton' onClick={() => handleDeleteList(list.id)}>Delete List</button>
-                        {showTaskForm && (
+                        {showTaskForm[list.id] && (
                             <TaskForm
                                 onCreateTask={(task) => handleAddTask(list.id, task)}
                             />
