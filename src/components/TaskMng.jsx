@@ -12,6 +12,8 @@ const TaskMng = () => {
     const [showForm, setShowForm] = useState(false);
     //state for storing the list of task lists
     const [taskLists, setTaskLists] = useState([]);
+    //state for new tasks in a list
+    const [tasks, setTasks] = useState([]);
 
     //load saved task lists
     useEffect(() => {
@@ -59,10 +61,16 @@ const TaskMng = () => {
         });
         setTaskLists(updatedTaskLists);
     };
-
+    //updating taskLists
     const handleDeleteList = (newTaskLists) => {
         setTaskLists(newTaskLists);
     };
+    //updating the new tasklists 
+    const handleDeleteTask = (updatedLists) => {
+        setTaskLists(updatedLists);
+    };
+
+
 
     return (
         <div className="tasksListContainer">
@@ -70,7 +78,7 @@ const TaskMng = () => {
             <h1>Welcome</h1>
             <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
-            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} />
+            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} onDeleteTask={handleDeleteTask} />
 
         </div>
     )

@@ -4,7 +4,7 @@ import TaskForm from './CreateTaskForm';
 import "./TaskMng.css";
 //gets taskLists, onAddRAsk and onDeleteList as props from parent TaskMng
 //taskLists is an array of objects
-const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
+const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
 
     //store boolean values for each list ID to only show task form for that specific list that has been clicled
     const [showTaskForm, setShowTaskForm] = useState({});
@@ -44,6 +44,21 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
         const newTaskLists = taskLists.filter(list => list.id !== listId);
         onDeleteList(newTaskLists);
     }
+
+    const handleDeleteTask = (listId, taskId) => {
+        const updatedLists = taskLists.map(list => {
+            if (list.id === listId) {
+                return {
+                    ...list,
+                    tasks: list.tasks.filter(task => task.id !== taskId)
+                };
+            }
+            return list;
+        });
+        onDeleteTask(updatedLists);
+    };
+
+
     return (
         <div>
             <h2>Task Lists</h2>
@@ -61,8 +76,9 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList }) => {
                         {/* Display tasks for the current list */}
                         <ul>
                             {list.tasks && list.tasks.map((task, index) => (
-                                <li key={index}>
+                                <li className='displayTask' key={index}>
                                     {task.taskName}- Priority: {task.priority} - Status: {task.status} - Due Date: {task.dueDate}
+                                    <button className="deleteTaskButton" onClick={() => handleDeleteTask(list.id, task.id)}>Delete</button>
                                 </li>
                             ))}
                         </ul>
