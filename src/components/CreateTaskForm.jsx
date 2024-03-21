@@ -10,7 +10,9 @@ const TaskForm = ({ onCreateTask }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onCreateTask({ taskName, priority, status, dueDate });
+        const task = { taskName, priority, status, dueDate };
+        console.log("Task to be submitted:", task); // Log the task data
+        onCreateTask(task);
         setTaskName('');
         setPriority('high');
         setStatus('todo');

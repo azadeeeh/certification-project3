@@ -45,18 +45,12 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
         onDeleteList(newTaskLists);
     }
 
+
     const handleDeleteTask = (listId, taskId) => {
-        const updatedLists = taskLists.map(list => {
-            if (list.id === listId) {
-                return {
-                    ...list,
-                    tasks: list.tasks.filter(task => task.id !== taskId)
-                };
-            }
-            return list;
-        });
-        onDeleteTask(updatedLists);
+        onDeleteTask(listId, taskId);
     };
+
+
 
 
     return (
@@ -70,7 +64,7 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
                         <button className='add-deleteTaskButton' onClick={() => handleDeleteList(list.id)}>Delete List</button>
                         {showTaskForm[list.id] && (
                             <TaskForm
-                                onCreateTask={(task) => handleAddTask(list.id, task)}
+                                onCreateTask={(task) => onAddTask(list.id, task)}
                             />
                         )}
                         {/* Display tasks for the current list */}
@@ -78,7 +72,7 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
                             {list.tasks && list.tasks.map((task, index) => (
                                 <li className='displayTask' key={index}>
                                     {task.taskName}- Priority: {task.priority} - Status: {task.status} - Due Date: {task.dueDate}
-                                    <button className="deleteTaskButton" onClick={() => handleDeleteTask(list.id, task.id)}>Delete</button>
+                                    <button className="deleteTaskButton" onClick={() => onDeleteTask(list.id, task.id)}>Delete</button>
                                 </li>
                             ))}
                         </ul>

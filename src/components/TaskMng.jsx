@@ -12,8 +12,7 @@ const TaskMng = () => {
     const [showForm, setShowForm] = useState(false);
     //state for storing the list of task lists
     const [taskLists, setTaskLists] = useState([]);
-    //state for new tasks in a list
-    const [tasks, setTasks] = useState([]);
+
 
     //load saved task lists
     useEffect(() => {
@@ -41,7 +40,9 @@ const TaskMng = () => {
     const handleCreateList = (listName) => {
         const newList = {
             id: Date.now(), //unique id for each list
-            name: listName
+            name: listName,
+            tasks: []
+
         };
         setTaskLists([...taskLists, newList]);
         toggleForm(); //close the form
@@ -49,12 +50,15 @@ const TaskMng = () => {
 
     //adding new task to a list
     const handleAddTaskToList = (listId, task) => {
+        const taskId = Date.now();
+        console.log("New Task ID:", taskId); // Log the generated taskId
+        console.log("Task to be added:", task); // Log the task being added
         //find the list with the matching list id
         const updatedTaskLists = taskLists.map(list => {
             if (list.id === listId) {
                 return {
                     ...list,
-                    tasks: { ...list.task, task }
+                    tasks: [...list.tasks, { ...task, id: taskId }] //add unique id to the task
                 };
             }
             return list;
@@ -65,10 +69,33 @@ const TaskMng = () => {
     const handleDeleteList = (newTaskLists) => {
         setTaskLists(newTaskLists);
     };
-    //updating the new tasklists 
-    const handleDeleteTask = (updatedLists) => {
-        setTaskLists(updatedLists);
+
+
+    //delete a task from taskList
+    const handleDeleteTask = (listId, taskId) => {
+        const updatedTaskLists = taskLists.map(list => {
+            console.log(taskId);
+            if (list.id === listId) {
+                return {
+                    ...list,
+                    tasks: list.tasks.filter(task => task.id !== taskId)
+
+                };
+
+            }
+            console.log(list);
+            return list;
+
+        });
+        setTaskLists(updatedTaskLists);
+        console.log(taskLists);
     };
+    //logging the updated taskList
+    useEffect(() => {
+        console.log(taskLists);
+    }, [taskLists]);
+
+
 
 
 
@@ -79,6 +106,8 @@ const TaskMng = () => {
             <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
             <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} onDeleteTask={handleDeleteTask} />
+
+
 
         </div>
     )
