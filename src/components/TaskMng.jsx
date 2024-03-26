@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName } from '../feature/TaskMngSlice';
+import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName, setTaskLists } from '../feature/TaskMngSlice';
 
 import CreateListForm from './CreateListForm'; // Import the TaskForm component
 import TaskList from './TaskList';
@@ -19,23 +19,28 @@ const TaskMng = () => {
     const taskLists = useSelector((state) => state.taskMng.taskLists);
     const dispatch = useDispatch();
 
-    /** 
+
     //load saved task lists
     useEffect(() => {
-        const savedTaskLists = localStorage.getItem('taskLists');
+        const savedTaskLists = JSON.parse(localStorage.getItem('taskLists'));
         if (savedTaskLists) {
-            setTaskLists(JSON.parse(savedTaskLists));
+            dispatch(setTaskLists(savedTaskLists));
         }
 
-    }, []);
-    
+    }, [dispatch]);
+
+
+
+
+
+
 
     //save task lists to local storage
     useEffect(() => {
         localStorage.setItem('taskLists', JSON.stringify(taskLists));
     }, [taskLists]);
-    
 
+    /** 
     //toggle value of showForm to control visibility of the create list form
     const toggleForm = () => {
         setShowForm(!showForm);
@@ -152,6 +157,7 @@ const TaskMng = () => {
             <h1>Welcome</h1>
             <button className='createListButton' onClick={handleToggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
+
             <TaskList
                 taskLists={taskLists}
                 onAddTask={handleAddTaskToList}

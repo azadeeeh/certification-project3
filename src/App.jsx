@@ -2,8 +2,8 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  NavLink
-} from 'react-router-dom'
+  NavLink,
+} from 'react-router-dom';
 import './index.css';
 
 /**
@@ -15,6 +15,11 @@ import About from './components/About'
 import Contact from './components/Contact'
 //for ActiveClassName: https://chat.openai.com/share/62274c61-ad20-4786-b36c-89fb7c2a33d9
 const App = () => {
+
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   return (
     <Router>
       <div className="container">
@@ -35,6 +40,9 @@ const App = () => {
           </ul>
         </nav>
       </div>
+      <div>
+        <button className="backButton" onClick={handleGoBack}>back</button>
+      </div>
       {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL.
             Furthermore, notice how the content above always renders? On each page? */}
@@ -46,6 +54,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
+
     </Router>
   );
 }
