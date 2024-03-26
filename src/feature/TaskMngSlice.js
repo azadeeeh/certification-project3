@@ -1,3 +1,6 @@
+
+//tutorial used:https://www.youtube.com/watch?v=jR4fagDcvrc
+
 import { createSlice } from '@reduxjs/toolkit'
 
 
