@@ -95,6 +95,19 @@ const TaskMng = () => {
         console.log(taskLists);
     }, [taskLists]);
 
+    const handleUpdateListName = (listId, newName) => {
+        const updatedTaskLists = taskLists.map(list => {
+            if (list.id === listId) {
+                return {
+                    ...list,
+                    name: newName
+                };
+            }
+            return list;
+        });
+        setTaskLists(updatedTaskLists);
+    };
+
 
 
 
@@ -105,7 +118,7 @@ const TaskMng = () => {
             <h1>Welcome</h1>
             <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
-            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} onDeleteTask={handleDeleteTask} />
+            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} onDeleteTask={handleDeleteTask} onUpdateListName={handleUpdateListName} />
 
 
 

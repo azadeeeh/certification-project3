@@ -1,57 +1,47 @@
-//display the list of task lists
 import React, { useState } from 'react';
 import TaskForm from './CreateTaskForm';
 import "./TaskMng.css";
-//gets taskLists, onAddRAsk and onDeleteList as props from parent TaskMng
-//taskLists is an array of objects
-const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
 
-    //store boolean values for each list ID to only show task form for that specific list that has been clicled
+const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask, onUpdateListName }) => {
     const [showTaskForm, setShowTaskForm] = useState({});
-    /*const handleAddTask = (listId, task) => {
-        onAddTask(listId, task);
-        setShowTaskForm(false);
-    };*/
+    const [editingListId, setEditingListId] = useState(null);
+    const [editedListName, setEditedListName] = useState('');
+
     const handleToggleTaskForm = (listId) => {
-        // Toggle the boolean value for the clicked listId
-        //prevState shows the previous state of showTaskForm
-        //setShowTaskForm updates the state
         setShowTaskForm(prevState => ({
             ...prevState,
-            [listId]: !prevState[listId]// If there is no id equal to the one we want in prevState close
+            [listId]: !prevState[listId]
         }));
     };
-    //this function is called when a new task is added
-    const handleAddTask = (listId, task) => {
-        // Find the list index in the taskLists array based on the listId
-        //this is required to add the task to the correct list
-        const listIndex = taskLists.findIndex(list => list.id === listId);
-        //if we found a list index we crate a copy of taskLists
-        if (listIndex !== -1) {
-            // If the list exists, push the tasklists to an array
-            const updatedTaskLists = [...taskLists];
-            updatedTaskLists[listIndex].tasks = updatedTaskLists[listIndex].tasks || [];
-            //push the new task into the current list
-            updatedTaskLists[listIndex].tasks.push(task);
-            onAddTask(updatedTaskLists); // Update the taskLists state
-        }
 
-        setShowTaskForm(false); // Close task input form after adding task
+    const handleAddTask = (listId, task) => {
+        const taskId = Date.now();
+        onAddTask(listId, { ...task, id: taskId });
+        setShowTaskForm({ ...showTaskForm, [listId]: false });
     };
 
-    //delete function find the list with the specific id and adds the rest to the new list using filter
     const handleDeleteList = (listId) => {
-        const newTaskLists = taskLists.filter(list => list.id !== listId);
-        onDeleteList(newTaskLists);
-    }
-
+        onDeleteList(listId);
+    };
 
     const handleDeleteTask = (listId, taskId) => {
         onDeleteTask(listId, taskId);
     };
 
+    const handleUpdateListName = (listId, newName) => {
+        onUpdateListName(listId, newName);
+        setEditingListId(null);
+    };
 
+    const handleEditListName = (listId, currentName) => {
+        setEditingListId(listId);
+        setEditedListName(currentName);
+    };
 
+    const handleSaveEditListName = () => {
+        handleUpdateListName(editingListId, editedListName);
+        setEditingListId(null);
+    };
 
     return (
         <div>
@@ -59,24 +49,37 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask }) => {
             <ul>
                 {taskLists.map((list) => (
                     <li key={list.id}>
-                        {list.name}
-                        <button className='add-deleteTaskButton' onClick={() => handleToggleTaskForm(list.id)}>{showTaskForm[list.id] ? 'Hide Task Form' : 'Add Task'}</button>
-                        <button className='add-deleteTaskButton' onClick={() => handleDeleteList(list.id)}>Delete List</button>
-                        {showTaskForm[list.id] && (
-                            <TaskForm
-                                onCreateTask={(task) => onAddTask(list.id, task)}
-                            />
-                        )}
-                        {/* Display tasks for the current list */}
-                        <ul>
-                            {list.tasks && list.tasks.map((task, index) => (
-                                <li className='displayTask' key={index}>
-                                    {task.taskName}- Priority: {task.priority} - Status: {task.status} - Due Date: {task.dueDate}
-                                    <button className="deleteTaskButton" onClick={() => onDeleteTask(list.id, task.id)}>Delete</button>
-                                </li>
-                            ))}
-                        </ul>
+                        {editingListId === list.id ? (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={editedListName}
+                                    onChange={(e) => setEditedListName(e.target.value)}
+                                />
+                                <button className='add-deleteTaskButton' onClick={handleSaveEditListName}>Save</button>
+                            </div>
+                        ) : (
+                            <div>
+                                {list.name}
 
+                                <button className='add-deleteTaskButton' onClick={() => handleToggleTaskForm(list.id)}>{showTaskForm[list.id] ? 'Hide Task Form' : 'Add Task'}</button>
+                                <button className='add-deleteTaskButton' onClick={() => handleDeleteList(list.id)}>Delete List</button>
+                                <button className='add-deleteTaskButton' onClick={() => handleEditListName(list.id, list.name)}>Edit</button>
+                                {showTaskForm[list.id] && (
+                                    <TaskForm
+                                        onCreateTask={(task) => handleAddTask(list.id, task)}
+                                    />
+                                )}
+                                <ul>
+                                    {list.tasks && list.tasks.map((task, index) => (
+                                        <li className='displayTask' key={index}>
+                                            {task.taskName}- Priority: {task.priority} - Status: {task.status} - Due Date: {task.dueDate}
+                                            <button className="deleteTaskButton" onClick={() => handleDeleteTask(list.id, task.id)}>Delete</button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
