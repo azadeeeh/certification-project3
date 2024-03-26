@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName } from '../feature/TaskMngSlice';
+
 import CreateListForm from './CreateListForm'; // Import the TaskForm component
 import TaskList from './TaskList';
 import "./TaskMng.css";
@@ -9,11 +12,14 @@ import "./TaskMng.css";
 
 const TaskMng = () => {
     //state for the button to be true or false depends on toggling state
-    const [showForm, setShowForm] = useState(false);
+    //const [showForm, setShowForm] = useState(false);
+    const showForm = useSelector((state) => state.taskMng.showForm);
     //state for storing the list of task lists
-    const [taskLists, setTaskLists] = useState([]);
+    //const [taskLists, setTaskLists] = useState([]);
+    const taskLists = useSelector((state) => state.taskMng.taskLists);
+    const dispatch = useDispatch();
 
-
+    /** 
     //load saved task lists
     useEffect(() => {
         const savedTaskLists = localStorage.getItem('taskLists');
@@ -22,33 +28,38 @@ const TaskMng = () => {
         }
 
     }, []);
+    
 
     //save task lists to local storage
     useEffect(() => {
         localStorage.setItem('taskLists', JSON.stringify(taskLists));
     }, [taskLists]);
-
+    
 
     //toggle value of showForm to control visibility of the create list form
     const toggleForm = () => {
         setShowForm(!showForm);
+    };
+    */
+
+    const handleToggleForm = () => {
+        dispatch(toggleForm());
     };
 
     //whne a new task is created this function gets listName as input
     // and generates a unique id
     //it also updates the taskLists state 
     const handleCreateList = (listName) => {
-        const newList = {
-            id: Date.now(), //unique id for each list
-            name: listName,
-            tasks: []
-
-        };
-        setTaskLists([...taskLists, newList]);
-        toggleForm(); //close the form
+        dispatch(createList(listName));
     };
 
     //adding new task to a list
+
+    const handleAddTaskToList = (listId, task) => {
+        dispatch(addTaskToList({ listId, task }));
+    };
+
+    /** 
     const handleAddTaskToList = (listId, task) => {
         const taskId = Date.now();
         console.log("New Task ID:", taskId); // Log the generated taskId
@@ -65,14 +76,30 @@ const TaskMng = () => {
         });
         setTaskLists(updatedTaskLists);
     };
+    */
+
+
     //updating taskLists
-    const handleDeleteList = (newTaskLists) => {
-        setTaskLists(newTaskLists);
+
+    const handleDeleteList = (listId) => {
+        dispatch(deleteList(listId));
     };
+
+    /**const handleDeleteList = (newTaskLists) => {
+        setTaskLists(newTaskLists);
+    };*/
+
+
+
 
 
     //delete a task from taskList
+
     const handleDeleteTask = (listId, taskId) => {
+        dispatch(deleteTask({ listId, taskId }));
+    };
+
+    /**const handleDeleteTask = (listId, taskId) => {
         const updatedTaskLists = taskLists.map(list => {
             console.log(taskId);
             if (list.id === listId) {
@@ -89,13 +116,20 @@ const TaskMng = () => {
         });
         setTaskLists(updatedTaskLists);
         console.log(taskLists);
-    };
+    };*/
+
     //logging the updated taskList
     useEffect(() => {
         console.log(taskLists);
     }, [taskLists]);
 
+    //update list name
+
     const handleUpdateListName = (listId, newName) => {
+        dispatch(updateListName({ listId, newName }));
+    };
+
+    /**const handleUpdateListName = (listId, newName) => {
         const updatedTaskLists = taskLists.map(list => {
             if (list.id === listId) {
                 return {
@@ -106,7 +140,7 @@ const TaskMng = () => {
             return list;
         });
         setTaskLists(updatedTaskLists);
-    };
+    };*/
 
 
 
@@ -116,9 +150,15 @@ const TaskMng = () => {
         <div className="tasksListContainer">
 
             <h1>Welcome</h1>
-            <button className='createListButton' onClick={toggleForm} >Create a new Task List</button>
+            <button className='createListButton' onClick={handleToggleForm} >Create a new Task List</button>
             <CreateListForm showForm={showForm} onCreateList={handleCreateList} />
-            <TaskList taskLists={taskLists} onAddTask={handleAddTaskToList} onDeleteList={handleDeleteList} onDeleteTask={handleDeleteTask} onUpdateListName={handleUpdateListName} />
+            <TaskList
+                taskLists={taskLists}
+                onAddTask={handleAddTaskToList}
+                onDeleteList={handleDeleteList}
+                onDeleteTask={handleDeleteTask}
+                onUpdateListName={handleUpdateListName}
+            />
 
 
 

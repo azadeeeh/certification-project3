@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import TaskForm from './CreateTaskForm';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName } from '../feature/TaskMngSlice';
 import "./TaskMng.css";
 
-const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask, onUpdateListName }) => {
+const TaskList = () => {
     const [showTaskForm, setShowTaskForm] = useState({});
     const [editingListId, setEditingListId] = useState(null);
     const [editedListName, setEditedListName] = useState('');
+
+    const taskLists = useSelector((state) => state.taskMng.taskLists);
+    const dispatch = useDispatch();
 
     const handleToggleTaskForm = (listId) => {
         setShowTaskForm(prevState => ({
@@ -14,24 +19,47 @@ const TaskList = ({ taskLists, onAddTask, onDeleteList, onDeleteTask, onUpdateLi
         }));
     };
 
-    const handleAddTask = (listId, task) => {
+    /**const handleAddTask = (listId, task) => {
         const taskId = Date.now();
         onAddTask(listId, { ...task, id: taskId });
         setShowTaskForm({ ...showTaskForm, [listId]: false });
+    };*/
+
+    const handleAddTask = (listId, task) => {
+        dispatch(addTaskToList({ listId, task }));
+        //setShowTaskForm({ ...showTaskForm, [listId]: false });
     };
+
+    /**const handleDeleteList = (listId) => {
+        onDeleteList(listId);
+    };*/
 
     const handleDeleteList = (listId) => {
-        onDeleteList(listId);
+        dispatch(deleteList(listId));
     };
+
+
+    /**const handleDeleteTask = (listId, taskId) => {
+        onDeleteTask(listId, taskId);
+    };*/
 
     const handleDeleteTask = (listId, taskId) => {
-        onDeleteTask(listId, taskId);
+        dispatch(deleteTask({ listId, taskId }));
     };
 
-    const handleUpdateListName = (listId, newName) => {
+
+    /**const handleUpdateListName = (listId, newName) => {
         onUpdateListName(listId, newName);
         setEditingListId(null);
+    };*/
+
+    const handleUpdateListName = (listId, newName) => {
+        dispatch(updateListName({ listId, newName }));
+        setEditingListId(null);
     };
+
+
+
 
     const handleEditListName = (listId, currentName) => {
         setEditingListId(listId);
