@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName, setTaskLists } from '../feature/TaskMngSlice';
+import { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName, updateTaskName, setTaskLists } from '../feature/TaskMngSlice';
 
 import CreateListForm from './CreateListForm'; // Import the TaskForm component
 import TaskList from './TaskList';
@@ -147,6 +147,9 @@ const TaskMng = () => {
         setTaskLists(updatedTaskLists);
     };*/
 
+    const handleUpdateTaskName = (listId, taskId, newName) => {
+        dispatch(updateTaskName({ listId, taskId, newName }));
+    };
 
 
 
@@ -164,6 +167,7 @@ const TaskMng = () => {
                 onDeleteList={handleDeleteList}
                 onDeleteTask={handleDeleteTask}
                 onUpdateListName={handleUpdateListName}
+                onUpdateTaskName={handleUpdateTaskName}
             />
 
 

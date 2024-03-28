@@ -47,6 +47,22 @@ const taskMngSlice = createSlice({
             const list = state.taskLists.find((list) => list.id === listId);
             list.name = newName;
         },
+        updateTaskName: (state, action) => {
+            console.log("Payload:", action.payload);
+            const { listId, taskId, newName } = action.payload;
+            console.log("List ID:", listId);
+            console.log("Task ID:", taskId);
+            console.log("New Name:", newName);
+            const list = state.taskLists.find((list) => list.id === listId);
+            console.log("List:", list);
+            if (list) {
+                const task = list.tasks.find((task) => task.id === taskId);
+                console.log("Task:", task);
+                if (task) {
+                    task.taskName = newName;
+                }
+            }
+        },
         setTaskLists: (state, action) => {
             // Set the taskLists directly from the action payload
             state.taskLists = action.payload;
@@ -57,5 +73,5 @@ const taskMngSlice = createSlice({
 
 });
 
-export const { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName, setTaskLists } = taskMngSlice.actions;
+export const { toggleForm, createList, addTaskToList, deleteList, deleteTask, updateListName, updateTaskName, setTaskLists } = taskMngSlice.actions;
 export default taskMngSlice.reducer;
